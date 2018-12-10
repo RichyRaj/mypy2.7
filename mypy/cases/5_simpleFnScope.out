@@ -1,0 +1,11 @@
+STR: Outer 1
+INT: 1000
+STR: Inner 1
+INT: 110
+INT: 98
+STR: Outer 1
+INT: 10
+STR: Global
+INT: 2
+STR: Outer 2
+INT: 2

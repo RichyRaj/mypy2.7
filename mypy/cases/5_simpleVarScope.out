@@ -1,0 +1,8 @@
+STR: At Global Level :
+INT: 5
+STR: At Local Level :
+INT: 7
+STR: At Local Level :
+INT: 9
+STR: At Global Level :
+INT: 5

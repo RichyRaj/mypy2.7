@@ -1,0 +1,8 @@
+STR: Outer
+INT: 200
+STR: From Outer
+STR: Inner
+INT: 300
+STR: From Outer + Inner
+STR: Inner
+INT: 800
