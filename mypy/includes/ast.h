@@ -34,15 +34,20 @@ class SuiteNode: public Node {
 
 class FunctionNode: public Node {
   public:
-    FunctionNode(const std::string name, Node* suite): Node(), fnName(name),
-    fnStatements(suite) {}
-    virtual ~FunctionNode() {}
+    FunctionNode(const std::string name, Node* suite,
+      std::vector<Node*>* args): Node(), fnName(name),
+      fnStatements(suite),
+      formalArgs(args) {}
+    virtual ~FunctionNode() {
+      // TODO: delete args
+    }
     FunctionNode(const FunctionNode&) = delete;
     FunctionNode& operator=(const FunctionNode&) = delete;
     virtual const Literal* eval() const;
   private:
     const std::string fnName;
     Node* fnStatements;
+    std::vector<Node*>* formalArgs;
 };
 
 class FunctionCallNode: public Node {

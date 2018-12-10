@@ -132,7 +132,7 @@ decorated // Used in: compound_stmt
 funcdef // Used in: decorated, compound_stmt
 	: DEF NAME parameters COLON suite
 	{
-		$$ = new FunctionNode($2, $5);
+		$$ = new FunctionNode($2, $5, $3);
 		delete[] $2;
 		pool.add($$);
 	}

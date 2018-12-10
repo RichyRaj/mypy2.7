@@ -33,6 +33,18 @@ const Literal* FunctionNode::eval() const {
   TableManager::getInstance().setFunction(fnName, fnStatements);
 
   // Test code : TODO: Remove
+  if (formalArgs != nullptr) {
+    std::cout<<"====================================================="<<std::endl;
+    std::cout<<"The function has the following formal parameters"<<std::endl;
+    for (const Node* n : *formalArgs) {
+      const std::string argName = static_cast<const IdentNode*>(n)->getIdent();
+      std::cout<<argName<<std::endl;
+    }
+    std::cout<<"====================================================="<<std::endl;
+  }
+
+
+  // Test code : TODO: Remove
   // std::cout<<"Testing code ........."<<std::endl;
   // const Node* suite = TableManager::getInstance().getFunction(fnName);
   // suite->eval();
