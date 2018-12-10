@@ -141,6 +141,11 @@ parameters // Used in: funcdef
 varargslist // Used in: parameters, old_lambdef, lambdef
 	: star_fpdef_COMMA pick_STAR_DOUBLESTAR
 	| star_fpdef_COMMA fpdef opt_EQUAL_test opt_COMMA
+	{
+		// Only this is applicable for the project
+		// parameters without a comma are matched here..
+		std::cout<<"I am GROOT.."<<std::endl;
+	}
 	;
 opt_EQUAL_test // Used in: varargslist, star_fpdef_COMMA
 	: EQUAL test
@@ -148,7 +153,15 @@ opt_EQUAL_test // Used in: varargslist, star_fpdef_COMMA
 	;
 star_fpdef_COMMA // Used in: varargslist, star_fpdef_COMMA
 	: star_fpdef_COMMA fpdef opt_EQUAL_test COMMA
+	{
+		std::cout<<"I am GROOT GROOT.."<<std::endl;
+		// parameters with  comma are matched here..
+	}
 	| %empty
+	{
+		std::cout<<"I am EMPTY GROOT.."<<std::endl;
+		// Seems to get matched always		
+	}
 	;
 opt_DOUBLESTAR_NAME // Used in: pick_STAR_DOUBLESTAR
 	: COMMA DOUBLESTAR NAME
@@ -164,6 +177,9 @@ opt_COMMA // Used in: varargslist, opt_test, opt_test_2, testlist_safe, listmake
 	;
 fpdef // Used in: varargslist, star_fpdef_COMMA, fplist, star_fpdef_notest
 	: NAME
+	{
+		std::cout<<"Named formal parameter.... "<<yylval.id<<std::endl;
+	}
 	| LPAR fplist RPAR
 	;
 fplist // Used in: fpdef
@@ -253,6 +269,7 @@ expr_stmt // Used in: small_stmt
 	| testlist star_EQUAL
 	{
 		if ($2) {
+			std::cout<<"The final final Asg/.."<<std::endl;
 			$$ = new AsgBinaryNode($1, $2);
 			pool.add($$);
 		} else {
@@ -281,6 +298,7 @@ star_EQUAL // Used in: expr_stmt, star_EQUAL
 	: star_EQUAL EQUAL pick_yield_expr_testlist
 	{
 		if ($1 == 0) {
+			std::cout<<"Thats coool...."<<std::endl;
 			$$ = $3;
 		}
 		if ($1 != 0 && $3 != 0){
@@ -918,6 +936,7 @@ atom // Used in: power
 	}
 	| NAME
 	{
+		std::cout<<"Well this does not seem to affect the new ... "<< yylval.id <<std::endl;
 		$$ = new IdentNode(yylval.id);
 		pool.add($$);
 		delete[] yylval.id;
