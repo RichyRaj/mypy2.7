@@ -35,6 +35,7 @@
 %union {
 	Node* node;
 	std::vector<Node*>* fnStatements;
+	std::vector<Node*>* args;
   int intVal;
 	float floatVal;
 	char* id;
@@ -55,6 +56,8 @@
 %type<fnStatements> plus_stmt
 %type<intVal> comp_op LESS GREATER EQEQUAL GREATEREQUAL LESSEQUAL GRLT NOTEQUAL
 %type<intVal> IN IS NOT
+%type<node> fpdef
+%type<args> star_fpdef_COMMA varargslist parameters
 
 %left PLUS MINUS
 %left MULT DIV PERCENT DOUBLESLASH
@@ -136,7 +139,15 @@ funcdef // Used in: decorated, compound_stmt
 	;
 parameters // Used in: funcdef
 	: LPAR varargslist RPAR
+	{
+		// TODO: Delete it !
+		$$ = $2;
+		std::cout<<"Rocket has collected your params in a vector ! ..  "<<$$->size()<<std::endl;
+	}
 	| LPAR RPAR
+	{
+		$$ = nullptr;
+	}
 	;
 varargslist // Used in: parameters, old_lambdef, lambdef
 	: star_fpdef_COMMA pick_STAR_DOUBLESTAR
@@ -144,7 +155,9 @@ varargslist // Used in: parameters, old_lambdef, lambdef
 	{
 		// Only this is applicable for the project
 		// parameters without a comma are matched here..
+		// So the last or the only one param is here
 		std::cout<<"I am GROOT.."<<std::endl;
+		$$->push_back($2);
 	}
 	;
 opt_EQUAL_test // Used in: varargslist, star_fpdef_COMMA
@@ -154,13 +167,17 @@ opt_EQUAL_test // Used in: varargslist, star_fpdef_COMMA
 star_fpdef_COMMA // Used in: varargslist, star_fpdef_COMMA
 	: star_fpdef_COMMA fpdef opt_EQUAL_test COMMA
 	{
+		$$ = $1;
+		$$->push_back($2);
 		std::cout<<"I am GROOT GROOT.."<<std::endl;
 		// parameters with  comma are matched here..
 	}
 	| %empty
 	{
 		std::cout<<"I am EMPTY GROOT.."<<std::endl;
-		// Seems to get matched always		
+		// Seems to get matched always
+		$$ = new std::vector<Node*>();
+		$$->reserve(4);
 	}
 	;
 opt_DOUBLESTAR_NAME // Used in: pick_STAR_DOUBLESTAR
@@ -179,8 +196,16 @@ fpdef // Used in: varargslist, star_fpdef_COMMA, fplist, star_fpdef_notest
 	: NAME
 	{
 		std::cout<<"Named formal parameter.... "<<yylval.id<<std::endl;
+		// TODO: Check if deleting the vector in the func node will cause a double free
+		$$ = new IdentNode(yylval.id);
+		pool.add($$);
+		// TODO: check if leaks
+		delete[] yylval.id;
 	}
 	| LPAR fplist RPAR
+	{
+		$$ = nullptr;
+	}
 	;
 fplist // Used in: fpdef
 	: fpdef star_fpdef_notest COMMA
