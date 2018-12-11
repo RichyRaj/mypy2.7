@@ -61,27 +61,60 @@ const Literal* FunctionNode::eval() const {
 
 const Literal* FunctionCallNode::eval() const {
   const Node* suite = TableManager::getInstance().getFunction(fnName);
-  std::cout<<""<<std::endl;
+  unsigned int formalSize = 0;
+  unsigned int actualSize = 0;
 
   // TODO : Remove code
-  std::cout<<"======== Function "<<fnName<<std::endl;
-  std::cout<<TableManager::getInstance().checkFormalArgs(fnName)<<std::endl;
-  // TODO : Put this inside if yes
-  std::cout<<TableManager::getInstance().getFormalArgs(fnName)->size()<<std::endl;
-  // for (unsigned int i = 0; i < TableManager::getInstance().getFormalArgs(fnName)->size(); i++) {
-    // const std::vector<Node*>* res = TableManager::getInstance().getFormalArgs(fnName);
-    // std::cout<<static_cast<const IdentNode*>((*res)[i])->getIdent()<<std::endl;
-  // }
-  std::cout<<"======== Function "<<fnName<<std::endl;
+  // std::cout<<"======== Function "<<fnName<<std::endl;
+  // std::cout<<TableManager::getInstance().checkFormalArgs(fnName)<<std::endl;
+  // // TODO : Put this inside if yes
+  // std::cout<<TableManager::getInstance().getFormalArgs(fnName)->size()<<std::endl;
+  // // for (unsigned int i = 0; i < TableManager::getInstance().getFormalArgs(fnName)->size(); i++) {
+  //   // const std::vector<Node*>* res = TableManager::getInstance().getFormalArgs(fnName);
+  //   // std::cout<<static_cast<const IdentNode*>((*res)[i])->getIdent()<<std::endl;
+  // // }
+  // std::cout<<"======== Function "<<fnName<<std::endl;
 
-  std::cout<<"========= AT THE CALL SITE ================="<<std::endl;
-  std::cout<<"Size of the formal args is : " << TableManager::getInstance().getFormalArgs(fnName)->size() << std::endl;
-  std::cout<<"Size of the actual args is : " << actArgs->size() << std::endl;
-  std::cout<<"========= AT THE CALL SITE ================="<<std::endl;
+  if (TableManager::getInstance().checkFormalArgs(fnName)) {
+    formalSize = TableManager::getInstance().getFormalArgs(fnName)->size();
+    if (actArgs != nullptr) {
+      actualSize = actArgs->size();
+      if (formalSize != actualSize) {
+        throw std::string(fnName + " requires " + std::to_string(formalSize) + " arguments");
+      }
+      // Formal and Actual args length match up...
+      TableManager::getInstance().pushScope();
+      for (unsigned int i = 0; i < formalSize; i++) {
+        const std::vector<Node*>* res = TableManager::getInstance().getFormalArgs(fnName);
+        std::cout<<static_cast<const IdentNode*>((*res)[i])->getIdent()<< " ---- ";
+        ((*actArgs)[i])->eval()->print();
+        const Node* asg = new AsgBinaryNode((*res)[i], (*actArgs)[i]);
+        PoolOfNodes::getInstance().add(asg);
+        try {
+          asg->eval(); // either nullptr or literal*
+        } catch (...) {
+          throw std::string("Error assigning parameters for  " + fnName);
+        }
+      }
+    } else {
+      throw std::string(fnName + " requires " + std::to_string(formalSize) + " arguments");
+    }
+  } else {
+    // No formal params
+    if (actArgs != nullptr) {
+      throw std::string(fnName + " takes no arguments");
+    } else {
+      // No Params
+      std::cout<<"No params No Params No params..."<<std::endl;
+      TableManager::getInstance().pushScope();
+    }
+  }
+  std::cout<<"All done.. getting to exec..."<<std::endl;
 
-
-  std::cout<<""<<std::endl;
-  TableManager::getInstance().pushScope();
+  // std::cout<<"========= AT THE CALL SITE ================="<<std::endl;
+  // std::cout<<"Size of the formal args is : " << TableManager::getInstance().getFormalArgs(fnName)->size() << std::endl;
+  // std::cout<<"Size of the actual args is : " << actArgs->size() << std::endl;
+  // std::cout<<"========= AT THE CALL SITE ================="<<std::endl;
 
   // TableManager::getInstance().printScopeStack();
   // suite is a SuiteNode
