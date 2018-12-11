@@ -52,11 +52,16 @@ class FunctionNode: public Node {
 
 class FunctionCallNode: public Node {
   public:
-    FunctionCallNode(const std::string name) : fnName(name) {}
-    virtual ~FunctionCallNode() {}
+    FunctionCallNode(const std::string name, std::vector<Node*>* args) : fnName(name), actArgs(args) {}
+    virtual ~FunctionCallNode() {
+      // TODO : Delete args
+    }
     virtual const Literal* eval() const;
+    FunctionCallNode(const FunctionCallNode&) = delete;
+    FunctionCallNode& operator=(const FunctionCallNode&) = delete;
   private:
     const std::string fnName;
+    std::vector<Node*>* actArgs;
 };
 
 class ReturnNode: public Node {
@@ -69,6 +74,24 @@ class ReturnNode: public Node {
   private:
     Node* retNode;
 };
+
+// class ActualParametersNode: public Node {
+//   public:
+//     ActualParametersNode(std::vector<Node*>* args): Node(), actArgs(args) {
+//     }
+//     virtual ~ActualParametersNode() {
+//       // TODO: Delete !
+//       // delete fnStatements;
+//     }
+//     const std::vector<Node*>* getActualArgs() const {
+//       return actArgs;
+//     }
+//     virtual const Literal* eval() const;
+//     ActualParametersNode(const ActualParametersNode&) = delete;
+//     ActualParametersNode& operator=(const ActualParametersNode&) = delete;
+//   private:
+//     std::vector<Node*>* actArgs;
+// };
 
 // ============== Classes related to the implementaion of if constructs ============
 class IfNode: public Node {

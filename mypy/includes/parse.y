@@ -57,7 +57,11 @@
 %type<intVal> comp_op LESS GREATER EQEQUAL GREATEREQUAL LESSEQUAL GRLT NOTEQUAL
 %type<intVal> IN IS NOT
 %type<node> fpdef
+// Formal Params
 %type<args> star_fpdef_COMMA varargslist parameters
+// Actual Params
+%type<args> star_argument_COMMA arglist opt_arglist trailer star_trailer
+%type<node> argument pick_argument
 
 %left PLUS MINUS
 %left MULT DIV PERCENT DOUBLESLASH
@@ -114,6 +118,9 @@ decorator // Used in: decorators
 opt_arglist // Used in: decorator, trailer
 	: arglist
 	| %empty
+	{
+		$$ = nullptr;
+	}
 	;
 decorators // Used in: decorators, decorated
 	: decorators decorator
@@ -929,9 +936,15 @@ power // Used in: factor
 			/*std::cout<<"******************* Without Index *******************"<<std::endl;*/
 			// No indexing ...
 			if (isFunctionCallOn) {
+				std::cout<<"At the time of function call... the status of args is... "<< std::endl;
+				if ($2 == nullptr) {
+					std::cout<<"Empty actaul ..."<<std::endl;
+				} else {
+					std::cout<<"Actual  actaul ..."<<std::endl;
+				}
 				const std::string fnName = static_cast<IdentNode*>($1)->getIdent();
 				/* std::cout<<"Function Call Flow ================ "<< fnName <<std::endl; */
-				$$ = new FunctionCallNode(fnName);
+				$$ = new FunctionCallNode(fnName, $2); // $2 will be nullptr or vector of actual args
 				pool.add($$);
 				// Reset states
 				isFunctionCallOn = false;
@@ -943,7 +956,13 @@ power // Used in: factor
 	;
 star_trailer // Used in: power, star_trailer
 	: star_trailer trailer
+	{
+		$$ = $2;
+	}
 	| %empty
+	{
+		$$ = nullptr;
+	}
 	;
 atom // Used in: power
 	: LPAR opt_yield_test RPAR
@@ -1032,10 +1051,22 @@ lambdef // Used in: test
 trailer // Used in: star_trailer
 	: LPAR opt_arglist RPAR
 	{
+		/* $2 is a vector of actual parameters  */
+		/* $$ = new ActualParametersNode($2); */
+		/* pool.add($$); */
+		$$ = $2;
+		std::cout<<"The actual params...."<<std::endl;
+		/* std::cout<<$2->size()<<std::endl; */
 		isFunctionCallOn = true;
 	}
 	| LSQB subscriptlist RSQB
+	{
+		$$ = nullptr;
+	}
 	| DOT NAME
+	{
+		$$ = nullptr;
+	}
 	;
 subscriptlist // Used in: trailer
 	: subscript star_COMMA_subscript COMMA
@@ -1172,10 +1203,24 @@ opt_testlist // Used in: classdef
 	;
 arglist // Used in: opt_arglist
 	: star_argument_COMMA pick_argument
+	{
+		std::cout<<"THats the one or last"<<std::endl;
+		$$->push_back($2);
+	}
 	;
 star_argument_COMMA // Used in: arglist, star_argument_COMMA
 	: star_argument_COMMA argument COMMA
+	{
+		$$ = $1;
+		$$->push_back($2);
+		std::cout<<"Thats the second here...."<<std::endl;
+	}
 	| %empty
+	{
+		std::cout<<"Thats the emoty here...."<<std::endl;
+		$$ = new std::vector<Node*>();
+		$$->reserve(4);
+	}
 	;
 star_COMMA_argument // Used in: star_COMMA_argument, pick_argument
 	: star_COMMA_argument COMMA argument
@@ -1187,8 +1232,17 @@ opt_DOUBLESTAR_test // Used in: pick_argument
 	;
 pick_argument // Used in: arglist
 	: argument opt_COMMA
+	{
+		$$ = $1;
+	}
 	| STAR test star_COMMA_argument opt_DOUBLESTAR_test
+	{
+		$$ = nullptr;
+	}
 	| DOUBLESTAR test
+	{
+		$$ = nullptr;
+	}
 	;
 argument // Used in: star_argument_COMMA, star_COMMA_argument, pick_argument
 	: test opt_comp_for

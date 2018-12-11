@@ -68,14 +68,20 @@ const Literal* FunctionCallNode::eval() const {
   std::cout<<TableManager::getInstance().checkFormalArgs(fnName)<<std::endl;
   // TODO : Put this inside if yes
   std::cout<<TableManager::getInstance().getFormalArgs(fnName)->size()<<std::endl;
-  for (unsigned int i = 0; i < TableManager::getInstance().getFormalArgs(fnName)->size(); i++) {
-    const std::vector<Node*>* res = TableManager::getInstance().getFormalArgs(fnName);
-    std::cout<<static_cast<const IdentNode*>((*res)[i])->getIdent()<<std::endl;
-  }
+  // for (unsigned int i = 0; i < TableManager::getInstance().getFormalArgs(fnName)->size(); i++) {
+    // const std::vector<Node*>* res = TableManager::getInstance().getFormalArgs(fnName);
+    // std::cout<<static_cast<const IdentNode*>((*res)[i])->getIdent()<<std::endl;
+  // }
   std::cout<<"======== Function "<<fnName<<std::endl;
+
+  std::cout<<"========= AT THE CALL SITE ================="<<std::endl;
+  std::cout<<"Size of the formal args is : " << TableManager::getInstance().getFormalArgs(fnName)->size() << std::endl;
+  std::cout<<"Size of the actual args is : " << actArgs->size() << std::endl;
+  std::cout<<"========= AT THE CALL SITE ================="<<std::endl;
+
+
   std::cout<<""<<std::endl;
   TableManager::getInstance().pushScope();
-
 
   // TableManager::getInstance().printScopeStack();
   // suite is a SuiteNode
@@ -106,6 +112,15 @@ const Literal* ReturnNode::eval() const {
   TableManager::getInstance().setSymbol("__RETURN__", res);
   return nullptr;
 }
+
+// const Literal* ActualParametersNode::eval() const {
+//   // So the suite node will be a list of statements in a vector
+//   // Loop thru the vector and eval them all !
+//   unsigned int actLen = (actArgs)->size();
+//   const std::vector
+//   // TODO: BE CAREFUL !
+//   return nullptr;
+// }
 
 // ============== Classes related to the implementaion of if constructs ============
 const Literal* IfNode::eval() const {
