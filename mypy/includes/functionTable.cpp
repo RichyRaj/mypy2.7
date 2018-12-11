@@ -24,10 +24,12 @@ bool FunctionTable::checkValue(const std::string& name) const {
 }
 
 const std::vector<Node*>* FunctionTable::getFormalArgs(const std::string& name) const {
-  // std::map<std::string, std::vector<Node*>*>::const_iterator it =
-  //   formalArgs.find(name);
-  // if (it == formalArgs.end()) throw std::string("Function ") + name + std::string(" not found");
-  // return it->second;
+  std::map<std::string, const std::vector<Node*>*>::const_iterator it =
+    formalArgs.find(name);
+    if (it == formalArgs.end()) {
+      throw std::string("Function ") + name + std::string(" does not have any formal arguments");
+    }
+    return it->second;
 }
 
 void FunctionTable::setFormalArgs(const std::string& name, const std::vector<Node*>* val) {

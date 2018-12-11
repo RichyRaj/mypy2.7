@@ -62,8 +62,16 @@ const Literal* FunctionNode::eval() const {
 const Literal* FunctionCallNode::eval() const {
   const Node* suite = TableManager::getInstance().getFunction(fnName);
   std::cout<<""<<std::endl;
+
+  // TODO : Remove code
   std::cout<<"======== Function "<<fnName<<std::endl;
   std::cout<<TableManager::getInstance().checkFormalArgs(fnName)<<std::endl;
+  // TODO : Put this inside if yes
+  std::cout<<TableManager::getInstance().getFormalArgs(fnName)->size()<<std::endl;
+  for (unsigned int i = 0; i < TableManager::getInstance().getFormalArgs(fnName)->size(); i++) {
+    const std::vector<Node*>* res = TableManager::getInstance().getFormalArgs(fnName);
+    std::cout<<static_cast<const IdentNode*>((*res)[i])->getIdent()<<std::endl;
+  }
   std::cout<<"======== Function "<<fnName<<std::endl;
   std::cout<<""<<std::endl;
   TableManager::getInstance().pushScope();

@@ -101,12 +101,11 @@ const std::vector<Node*>* TableManager::getFormalArgs(const std::string& name) c
   int tos = currentScope;
   while (tos >= 0) {
     if (fTables[tos].checkFormalArgs(name)) {
-      // return fTables[tos].getValue(name);
-      return nullptr;
+      return fTables[tos].getFormalArgs(name);
     }
     tos -= 1;
   }
-  throw std::string("Function " +  name + " not found ");
+  throw std::string("Function " +  name + " has no formal arguments");
   return nullptr;
 }
 
