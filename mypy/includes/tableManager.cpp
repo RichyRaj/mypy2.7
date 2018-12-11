@@ -85,7 +85,6 @@ void TableManager::setFunction(const std::string& name, const Node* val) {
   // Debug
   // fTables[0].printTable();
 }
-
 bool TableManager::checkFunction(const std::string& name) const {
   // 0th index in the vector of tables will be the global scope
   int tos = currentScope;
@@ -97,6 +96,40 @@ bool TableManager::checkFunction(const std::string& name) const {
   }
   return false;
 }
+
+const std::vector<Node*>* TableManager::getFormalArgs(const std::string& name) const {
+  int tos = currentScope;
+  while (tos >= 0) {
+    if (fTables[tos].checkFormalArgs(name)) {
+      // return fTables[tos].getValue(name);
+      return nullptr;
+    }
+    tos -= 1;
+  }
+  throw std::string("Function " +  name + " not found ");
+  return nullptr;
+}
+
+void TableManager::setFormalArgs(const std::string& name, const std::vector<Node*>* list) {
+  // 0th index in the vector of tables will be the global scope
+  int tos = currentScope;
+  std::cout<<"Setting Formal Args for ..."<<name<<std::endl;
+  fTables[tos].setFormalArgs(name, list);
+  // Debug
+  // fTables[0].printTable();
+}
+
+bool TableManager::checkFormalArgs(const std::string& name) const {
+  int tos = currentScope;
+  while (tos >= 0) {
+    if (fTables[tos].checkFormalArgs(name)) {
+      return true;
+    }
+    tos -= 1;
+  }
+  return false;
+}
+
 
 // ------------------ Methods for Scope Maintenance ------------------
 void TableManager::pushScope() {

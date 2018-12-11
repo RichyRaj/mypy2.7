@@ -28,6 +28,10 @@ class TableManager {
     void setFunction(const std::string& name, const Node* val);
     bool checkFunction(const std::string& name) const;
 
+    const std::vector<Node*>* getFormalArgs(const std::string& name) const;
+    void setFormalArgs(const std::string& name, const std::vector<Node*>*);
+    bool checkFormalArgs(const std::string& name) const;
+
     // ------------------ Methods for Scope Maintenance ------------------
     // For the sake of simplicity, we have to vectors as scope stack
     // One for functions and other for variables

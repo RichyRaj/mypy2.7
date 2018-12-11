@@ -132,6 +132,9 @@ decorated // Used in: compound_stmt
 funcdef // Used in: decorated, compound_stmt
 	: DEF NAME parameters COLON suite
 	{
+		/* $3 is the list of formal parameters - can either
+		be a vector or nullptr
+		*/
 		$$ = new FunctionNode($2, $5, $3);
 		delete[] $2;
 		pool.add($$);

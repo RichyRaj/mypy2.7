@@ -40,8 +40,15 @@ const Literal* FunctionNode::eval() const {
       const std::string argName = static_cast<const IdentNode*>(n)->getIdent();
       std::cout<<argName<<std::endl;
     }
+    TableManager::getInstance().setFormalArgs(fnName, formalArgs);
+    TableManager::getInstance().printScopeStack();
     std::cout<<"====================================================="<<std::endl;
+  } else {
+    std::cout<<"Nope, there are no params..."<<std::endl;
   }
+
+  bool yes = TableManager::getInstance().checkFormalArgs(fnName);
+  std::cout<<"===========Function " <<fnName<<" ======== formal pars " <<yes<<std::endl;
 
 
   // Test code : TODO: Remove
@@ -54,7 +61,14 @@ const Literal* FunctionNode::eval() const {
 
 const Literal* FunctionCallNode::eval() const {
   const Node* suite = TableManager::getInstance().getFunction(fnName);
+  std::cout<<""<<std::endl;
+  std::cout<<"======== Function "<<fnName<<std::endl;
+  std::cout<<TableManager::getInstance().checkFormalArgs(fnName)<<std::endl;
+  std::cout<<"======== Function "<<fnName<<std::endl;
+  std::cout<<""<<std::endl;
   TableManager::getInstance().pushScope();
+
+
   // TableManager::getInstance().printScopeStack();
   // suite is a SuiteNode
   try {
