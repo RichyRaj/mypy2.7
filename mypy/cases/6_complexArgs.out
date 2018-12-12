@@ -1,0 +1,10 @@
+ERROR: twice requires 1 arguments
+INT: 4
+INT: 2
+INT: -2
+INT: 400
+ERROR: changeSign requires 1 arguments
+INT: -100
+INT: -200
+INT: -2
+INT: 2
