@@ -112,7 +112,7 @@ const std::vector<Node*>* TableManager::getFormalArgs(const std::string& name) c
 void TableManager::setFormalArgs(const std::string& name, const std::vector<Node*>* list) {
   // 0th index in the vector of tables will be the global scope
   int tos = currentScope;
-  std::cout<<"Setting Formal Args for ..."<<name<<std::endl;
+  // std::cout<<"Setting Formal Args for ..."<<name<<std::endl;
   fTables[tos].setFormalArgs(name, list);
   // Debug
   // fTables[0].printTable();

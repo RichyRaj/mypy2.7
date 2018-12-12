@@ -1,0 +1,9 @@
+INT: 3
+ERROR: two requires 2 arguments
+ERROR: two requires 2 arguments
+ERROR: two requires 2 arguments
+INT: 0
+STR: 100Hello
+INT: 204
+INT: 6
+ERROR: news requires 2 arguments

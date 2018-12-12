@@ -152,7 +152,6 @@ parameters // Used in: funcdef
 	{
 		// TODO: Delete it !
 		$$ = $2;
-		std::cout<<"Rocket has collected your params in a vector ! ..  "<<$$->size()<<std::endl;
 	}
 	| LPAR RPAR
 	{
@@ -166,7 +165,6 @@ varargslist // Used in: parameters, old_lambdef, lambdef
 		// Only this is applicable for the project
 		// parameters without a comma are matched here..
 		// So the last or the only one param is here
-		std::cout<<"I am GROOT.."<<std::endl;
 		$$->push_back($2);
 	}
 	;
@@ -179,12 +177,12 @@ star_fpdef_COMMA // Used in: varargslist, star_fpdef_COMMA
 	{
 		$$ = $1;
 		$$->push_back($2);
-		std::cout<<"I am GROOT GROOT.."<<std::endl;
+		/* std::cout<<"I am GROOT GROOT.."<<std::endl; */
 		// parameters with  comma are matched here..
 	}
 	| %empty
 	{
-		std::cout<<"I am EMPTY GROOT.."<<std::endl;
+		/* std::cout<<"I am EMPTY GROOT.."<<std::endl; */
 		// Seems to get matched always
 		$$ = new std::vector<Node*>();
 		$$->reserve(4);
@@ -205,7 +203,7 @@ opt_COMMA // Used in: varargslist, opt_test, opt_test_2, testlist_safe, listmake
 fpdef // Used in: varargslist, star_fpdef_COMMA, fplist, star_fpdef_notest
 	: NAME
 	{
-		std::cout<<"Named formal parameter.... "<<yylval.id<<std::endl;
+		/* std::cout<<"Named formal parameter.... "<<yylval.id<<std::endl; */
 		// TODO: Check if deleting the vector in the func node will cause a double free
 		$$ = new IdentNode(yylval.id);
 		pool.add($$);
@@ -304,7 +302,6 @@ expr_stmt // Used in: small_stmt
 	| testlist star_EQUAL
 	{
 		if ($2) {
-			std::cout<<"The final final Asg/.."<<std::endl;
 			$$ = new AsgBinaryNode($1, $2);
 			pool.add($$);
 		} else {
@@ -333,7 +330,7 @@ star_EQUAL // Used in: expr_stmt, star_EQUAL
 	: star_EQUAL EQUAL pick_yield_expr_testlist
 	{
 		if ($1 == 0) {
-			std::cout<<"Thats coool...."<<std::endl;
+			/* std::cout<<"Thats coool...."<<std::endl; */
 			$$ = $3;
 		}
 		if ($1 != 0 && $3 != 0){
@@ -936,14 +933,7 @@ power // Used in: factor
 			/*std::cout<<"******************* Without Index *******************"<<std::endl;*/
 			// No indexing ...
 			if (isFunctionCallOn) {
-				std::cout<<"At the time of function call... the status of args is... "<< std::endl;
-				if ($2 == nullptr) {
-					std::cout<<"Empty actaul ..."<<std::endl;
-				} else {
-					std::cout<<"Actual  actaul ..."<<std::endl;
-				}
 				const std::string fnName = static_cast<IdentNode*>($1)->getIdent();
-				/* std::cout<<"Function Call Flow ================ "<< fnName <<std::endl; */
 				$$ = new FunctionCallNode(fnName, $2); // $2 will be nullptr or vector of actual args
 				pool.add($$);
 				// Reset states
@@ -983,7 +973,6 @@ atom // Used in: power
 	}
 	| NAME
 	{
-		std::cout<<"Well this does not seem to affect the new ... "<< yylval.id <<std::endl;
 		$$ = new IdentNode(yylval.id);
 		pool.add($$);
 		delete[] yylval.id;
@@ -1055,8 +1044,6 @@ trailer // Used in: star_trailer
 		/* $$ = new ActualParametersNode($2); */
 		/* pool.add($$); */
 		$$ = $2;
-		std::cout<<"The actual params...."<<std::endl;
-		/* std::cout<<$2->size()<<std::endl; */
 		isFunctionCallOn = true;
 	}
 	| LSQB subscriptlist RSQB
@@ -1204,7 +1191,6 @@ opt_testlist // Used in: classdef
 arglist // Used in: opt_arglist
 	: star_argument_COMMA pick_argument
 	{
-		std::cout<<"THats the one or last"<<std::endl;
 		$$->push_back($2);
 	}
 	;
@@ -1213,11 +1199,9 @@ star_argument_COMMA // Used in: arglist, star_argument_COMMA
 	{
 		$$ = $1;
 		$$->push_back($2);
-		std::cout<<"Thats the second here...."<<std::endl;
 	}
 	| %empty
 	{
-		std::cout<<"Thats the emoty here...."<<std::endl;
 		$$ = new std::vector<Node*>();
 		$$->reserve(4);
 	}

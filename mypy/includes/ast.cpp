@@ -32,24 +32,12 @@ const Literal* FunctionNode::eval() const {
   // On definition, store in the function table
   TableManager::getInstance().setFunction(fnName, fnStatements);
 
-  // Test code : TODO: Remove
   if (formalArgs != nullptr) {
-    std::cout<<"====================================================="<<std::endl;
-    std::cout<<"The function has the following formal parameters"<<std::endl;
-    for (const Node* n : *formalArgs) {
-      const std::string argName = static_cast<const IdentNode*>(n)->getIdent();
-      std::cout<<argName<<std::endl;
-    }
     TableManager::getInstance().setFormalArgs(fnName, formalArgs);
-    TableManager::getInstance().printScopeStack();
-    std::cout<<"====================================================="<<std::endl;
+    // TableManager::getInstance().printScopeStack();
   } else {
-    std::cout<<"Nope, there are no params..."<<std::endl;
+    // std::cout<<"Nope, there are no params..."<<std::endl;
   }
-
-  bool yes = TableManager::getInstance().checkFormalArgs(fnName);
-  std::cout<<"===========Function " <<fnName<<" ======== formal pars " <<yes<<std::endl;
-
 
   // Test code : TODO: Remove
   // std::cout<<"Testing code ........."<<std::endl;
@@ -86,8 +74,9 @@ const Literal* FunctionCallNode::eval() const {
       TableManager::getInstance().pushScope();
       for (unsigned int i = 0; i < formalSize; i++) {
         const std::vector<Node*>* res = TableManager::getInstance().getFormalArgs(fnName);
-        std::cout<<static_cast<const IdentNode*>((*res)[i])->getIdent()<< " ---- ";
-        ((*actArgs)[i])->eval()->print();
+        // TODO: remove
+        // std::cout<<static_cast<const IdentNode*>((*res)[i])->getIdent()<< " ---- ";
+        // ((*actArgs)[i])->eval()->print();
         const Node* asg = new AsgBinaryNode((*res)[i], (*actArgs)[i]);
         PoolOfNodes::getInstance().add(asg);
         try {
@@ -105,11 +94,10 @@ const Literal* FunctionCallNode::eval() const {
       throw std::string(fnName + " takes no arguments");
     } else {
       // No Params
-      std::cout<<"No params No Params No params..."<<std::endl;
+      // std::cout<<"No params No Params No params..."<<std::endl;
       TableManager::getInstance().pushScope();
     }
   }
-  std::cout<<"All done.. getting to exec..."<<std::endl;
 
   // std::cout<<"========= AT THE CALL SITE ================="<<std::endl;
   // std::cout<<"Size of the formal args is : " << TableManager::getInstance().getFormalArgs(fnName)->size() << std::endl;

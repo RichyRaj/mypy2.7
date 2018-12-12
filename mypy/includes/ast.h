@@ -20,7 +20,6 @@ class SuiteNode: public Node {
     SuiteNode(std::vector<Node*>* stmts): Node(), fnStatements(stmts) {
     }
     virtual ~SuiteNode() {
-      std::cout<<"lol lol lol"<<std::endl;
       delete fnStatements;
     }
     const std::vector<Node*>* getSuite() const {
@@ -40,7 +39,7 @@ class FunctionNode: public Node {
       fnStatements(suite),
       formalArgs(args) {}
     virtual ~FunctionNode() {
-      // TODO: delete args      
+      // TODO: delete args
       delete formalArgs;
     }
     FunctionNode(const FunctionNode&) = delete;
@@ -117,9 +116,7 @@ class IfNode: public Node {
 class PrintNode: public Node {
   public:
     PrintNode(Node* n) : Node(), nd(n) {}
-    virtual ~PrintNode() {
-      std::cout<<"THe print node is being destroyed....."<<std::endl;
-    }
+    virtual ~PrintNode() {}
     PrintNode(const PrintNode&) = delete;
     PrintNode& operator=(const PrintNode&) = delete;
     virtual const Literal* eval() const;
